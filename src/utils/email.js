@@ -26,7 +26,7 @@ export const sendOtptoEmail = async (otpnumber, email) => {
         });
     
         console.log("message send %s", info.messageId)
-
+        return true
     } catch (err){
         console.log(err);
         throw err

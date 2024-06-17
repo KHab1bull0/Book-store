@@ -1,0 +1,26 @@
+import { pool } from "../config/pgdb.js";
+
+
+export const userTable = async () => {
+    try {
+
+        const query = `
+        CREATE TABLE IF NOT EXISTS users(
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            email VARCHAR(255) UNIQUE NOT NULL,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            role VARCHAR(20) CHECK (role IN ('user', 'admin', 'superadmin')),
+            status VARCHAR(20) CHECK (status IN ('active', 'inactive')),
+            createdAt TIMESTAMPTZ DEFAULT NOW(),
+            updatedAt TIMESTAMPTZ DEFAULT NOW()
+        );
+        `;
+
+        const res = await pool.query(query);
+        console.log("User table created...");
+
+    } catch (e) {
+        throw e;
+    };
+}
