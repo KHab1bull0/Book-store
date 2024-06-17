@@ -17,6 +17,7 @@ const transport = nodemailer.createTransport({
 
 export const sendOtptoEmail = async (otpnumber, email) => {
     try{
+        
         const info = await transport.sendMail({
             to: email,
             subject: process.env.emailsub,
@@ -27,6 +28,7 @@ export const sendOtptoEmail = async (otpnumber, email) => {
     
         console.log("message send %s", info.messageId)
         return true
+
     } catch (err){
         console.log(err);
         throw err

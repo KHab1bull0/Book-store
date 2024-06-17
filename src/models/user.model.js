@@ -6,12 +6,12 @@ export const userTable = async () => {
 
         const query = `
         CREATE TABLE IF NOT EXISTS users(
-            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            uuid UUID PRIMARY KEY,
             email VARCHAR(255) UNIQUE NOT NULL,
             username VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
-            role VARCHAR(20) CHECK (role IN ('user', 'admin', 'superadmin')),
-            status VARCHAR(20) CHECK (status IN ('active', 'inactive')),
+            role VARCHAR(20) CHECK (role IN ('user', 'admin', 'superadmin')) DEFAULT 'user',
+            status VARCHAR(20) CHECK (status IN ('active', 'inactive')) DEFAULT 'inactive',
             createdAt TIMESTAMPTZ DEFAULT NOW(),
             updatedAt TIMESTAMPTZ DEFAULT NOW()
         );

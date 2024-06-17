@@ -82,6 +82,69 @@ export const putOne = async (table, putTable, newelem, column, columnElem) => {
     }
 }
 
+export const putmany = async (table, columns, newValue, where, whereElem) => {
+    try {
+
+        const filterData = function (arr) {
+            const clearData = []
+            for (let i = 0; i < arr.length; i++) {
+                let str = ''
+                let type = typeof arr[i];
+                if (type == 'string') {
+
+                    for (let j = 0; j < arr[i].length; j++) {
+                        if (arr[i][j] !== ';') {
+                            str += arr[i][j];
+                        }
+                    }
+                    clearData.push(str)
+                } else if (typeof arr[i] == 'number' || typeof arr[i] == 'boolean' || typeof arr[i] == 'object') {
+                    clearData.push(arr[i]);
+                };
+            }
+
+            return clearData
+        }
+
+        const generat = (columns, values) => {
+            let str = ''
+            if (typeof values[0] == 'number') {
+                str += columns[0] + " = " + values[0];
+            } else {
+                str += columns[0] + " = " + `'${values[0]}'`;
+            }
+            for (let i = 0; i < columns.length; i++) {
+                if (i > 0) {
+                    const type = typeof values[i];
+
+                    if (type == 'number' || type == 'boolean') {
+                        str += ', ' + columns[i] + " = " + values[i];
+                    } else {
+                        str += ', ' + columns[i] + " = " + `'${values[i]}'`;
+                    }
+                }
+            }
+            return str
+        };
+
+        const cleardata = filterData(newValue)
+        const gencolumn = generat(columns, cleardata);
+
+        if (typeof whereElem == 'string') {
+            const filterwhere = filterData([whereElem])
+            whereElem = `'${filterwhere}'`
+        }
+
+        const query = `UPDATE ${table} SET ${gencolumn}  WHERE ${where} = ${whereElem} RETURNING *;`
+
+        const res = await pool.query(query);
+        return res.rows
+
+    } catch (err) {
+        throw err
+    }
+}
+
 
 export const deleteOneVarchar = async (table, column, columnElem) => {
     try {
@@ -129,7 +192,7 @@ export const insertMany = async (table, columnArr, valueArr) => {
 
             const len = valueArr.length;
             let str = '$1'
-            for(let i = 2; i <= len; i++){
+            for (let i = 2; i <= len; i++) {
                 str += ', ' + `$${i}`;
             }
             return str
@@ -147,6 +210,17 @@ export const insertMany = async (table, columnArr, valueArr) => {
     }
 }
 
+export const dropTable = async (table) => {
+    try {
 
+        const query = `
+        DROP TABLE ${table};
+        `
 
+        const result = await pool.query(query);
+        return result;
 
+    } catch (e) {
+        throw e
+    }
+}
