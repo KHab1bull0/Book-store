@@ -5,7 +5,7 @@ export const otpmodel = async (body) => {
     try{
         const query = `
         CREATE TABLE IF NOT EXISTS userotps(
-            email VARCHAR(32) NOT NULL,
+            uuid VARCHAR(100) NOT NULL, 
             otp VARCHAR(6) NOT NULL
         );
         `

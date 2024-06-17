@@ -11,6 +11,8 @@ const createTables = async (req, res) => {
 
         await userTable();
         await otpmodel()
+
+        
         return res.status(200).send({
             message: "Tables created..."
         });

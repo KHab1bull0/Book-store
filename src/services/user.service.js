@@ -22,7 +22,7 @@ export const userRegister = async (body) => {
         //     }
         // };  
 
-        
+
         // Option 2
         const query1 = 'SELECT * FROM users WHERE email = $1;';
         const existsEmail = await pool.query(query1, [email]);
@@ -43,14 +43,17 @@ export const userRegister = async (body) => {
         const hashedpassword = await hashPassword(password);
         const uuid = uuidv4();
         const otp = otpgen.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
-        const emailres = await sendOtptoEmail(otp, email);
-
+        
+        await insertMany('userotps', ['uuid','otp'], [uuid, otp]);
+        
+        
         if (!role) {
             const result = await insertMany('users', ['uuid', 'email', 'username', 'password'], [uuid, email, username, hashedpassword]);
         } else {
             const result = await insertMany('users', ['uuid', 'email', 'username', 'password', 'role'], [uuid, email, username, hashedpassword, role]);
         }
-
+        
+        const emailres = await sendOtptoEmail(otp, email);
         return result = {
             uuid: uuid,
             emailres: true

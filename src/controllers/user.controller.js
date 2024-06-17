@@ -5,7 +5,7 @@ import { userValidation } from "../validation/user.valid.js";
 
 
 
-
+// register qismi bitdi  dayarli toliq
 export const postUser = async (req, res) => {
     try {
 
@@ -34,15 +34,17 @@ export const postUser = async (req, res) => {
     };
 };
 
+
+// verify qismi bitdi faqat validatsiya qo'shgan yaxshi 
 export const verifyOtp = async (req, res) => {
     try {
         const { uuid, otp} = req.body;
 
-        const user = await getOneVarchar('users', 'uuid', uuid);
+        const userotp = await getOneVarchar('userotps', 'uuid', uuid);
 
-        if(!user.length) {
+        if(!userotp.length) {
             return res.status().send({
-                message: "User not found"
+                message: "Otp not found"
             });
         }
 
@@ -65,3 +67,5 @@ export const verifyOtp = async (req, res) => {
         });
     };
 }
+
+// bugun qilish kerak hammasini 
