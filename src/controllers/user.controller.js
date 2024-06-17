@@ -67,5 +67,3 @@ export const verifyOtp = async (req, res) => {
         });
     };
 }
-
-// bugun qilish kerak hammasini 
